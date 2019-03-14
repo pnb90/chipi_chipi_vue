@@ -57,7 +57,8 @@ export default {
       axios.post("/api/lists", params)
         .then(response => {
           this.lists.push(response.data);
-        }).catch(error => {
+        })
+        .catch(error => {
           this.errors = error.response.data.errors;
         });
     }

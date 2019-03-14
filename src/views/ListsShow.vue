@@ -1,14 +1,14 @@
 <template>
   <div class="lists-show">
     <h1>{{ list.name }} </h1>
-    <div v-for="product in list.products">
-      <ul>
-        <li>{{ product.name }}</li>
-      </ul>
-        <span class="btn btn-danger" v-on:click="destroyListProduct()"> Remove Item </span>
 
-       <!-- need to retrieve quantity and description via list_products -->
+    <div v-for="product in list.products">
+      <p>{{ product.name }}</p>
+      <p>{{ product.list_products }}</p>
+      <button class="btn-sm btn-danger" v-on:click="destroyListProduct(product)"> Remove Item </button>
        <div v-for="inventory in product.inventories">
+
+        <!-- in_stock returns an array, so always truthy unless as in no inventories whatsoever -->
           <div v-if="inventory.store.in_stock">
             <p> ${{ inventory.price }} at {{ inventory.store.name }} </p>
           </div>
@@ -20,9 +20,10 @@
    <!--      <div v-for="list_product in list_products">
           <p> {{list_product.quantity}} </p>
         </div> -->
-
+        <!-- need to retrieve quantity and description via list_products -->
         <p>Quantity: {{  }}</p>
         <p>Description: {{ product.description }}</p>
+        <br>
 
         <div v-for="store in product.stores">
            <div v-if="store.in_stock">
@@ -52,9 +53,9 @@
   </div>
 
 
-  <div v-for="product in list_products">
+<!--   <div v-for="product in list_products">
     {{product}}
-  </div>
+  </div> -->
 
 
   </div>
@@ -116,10 +117,9 @@
         });
       },
 
-      destroyListProduct: function() {
-        axios.delete("/api/list_products/" + this.list_product.id)
+      destroyListProduct: function(Product) {
+        axios.delete("/api/list_products/" + product.id)
         .then(response => {
-          console.log("Successfully deleted list_product", response.data);
         this.$router.push("/lists/" + this.list.id);
         });
       },
