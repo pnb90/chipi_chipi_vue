@@ -74,8 +74,10 @@
           if (hash.list_id === parseInt(this.$route.params.id)) {
             axios.delete("/api/list_products/" + hash.id)
             .then(response => {
-              // var listProductIndex = this.listProducts.indexOf()
-              this.$router.push("/lists/" + this.list.id)
+              axios.get("/api/lists/" + this.$route.params.id )
+                          .then(response => {
+                            this.list = response.data;
+                          });
             })
           }
         }
@@ -91,7 +93,10 @@
           .then(response => {
             console.log(response.data);
             this.list.products.push(response.data);
-            this.list.forceUpdate();
+            axios.get("/api/lists/" + this.$route.params.id )
+            .then(response => {
+              this.list = response.data;
+            });
           })
           .catch(error => {
             this.errors = error.response.data.errors;
