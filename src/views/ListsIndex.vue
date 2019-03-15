@@ -5,6 +5,7 @@
       <router-link v-bind:to="'/lists/' + list.id">
         <h2>{{ list.name }}</h2>
       </router-link>
+        <button class="btn btn-outline-danger" v-on:click="destroyList(list.id, list.name)"> Delete List </button>
     </div>
 
     <button class="btn btn-outline-success" type="button" data-toggle="collapse" data-target="#newList">
@@ -49,6 +50,19 @@ export default {
   },
   
   methods: {
+    destroyList: function(listID, listName) {
+      // console.log(listID)
+      // console.log(listName)
+      axios.delete("/api/lists/" + listID)
+      .then(response => {
+        console.log("Successfully deleted list", response.data);
+        var listIndex = this.lists.indexOf(listName);
+        this.lists.splice(listIndex, 1);
+      // this.$router.push("/lists");
+      });
+      
+    },
+
     submit: function() {
       var params = {
                     name: this.newListName
