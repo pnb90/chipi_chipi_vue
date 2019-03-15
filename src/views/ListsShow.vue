@@ -1,44 +1,30 @@
 <template>
   <div class="lists-show">
-  <h1>{{ list.name }} </h1>
-
-    <div v-for="product in list.products">
+    <h1>{{ list.name }} </h1>
+    <div v-for="(product, index) in list.products">
+      <!-- <h5> {{product}} </h5> -->
       <h3>{{ product.name }}</h3>
-      <p>{{ product.list_products }}</p>
-      <div v-for="inventory in product.inventories">
-      <!-- in_stock returns an array, so always truthy unless as in no inventories whatsoever -->
-      <div v-if="inventory.store.in_stock">
-        <p> ${{ inventory.price }} at {{ inventory.store.name }} </p>
-      </div>
+      <button class="btn-sm btn-danger" v-on:click="destroyListProduct(product.list_products)"> 
+      Remove Item 
+      </button>
     </div>
-    <button class="btn-sm btn-danger" v-on:click="destroyListProduct()"> Remove Item </button>
-        <!-- need to retrieve quantity and description via list_products -->
-    <div v-for="list_product in list_products">
-      <p>Quantity: {{  }}</p>
-      <p>Description: {{ product.description }}</p>
+    
+    <!-- What I need to get: the list product id via the product  -->
+
+    <button class="btn-sm btn-outline-success" type="button" data-toggle="collapse" data-target="#newItem">
+    Add Item 
+    </button>
+
+    <div class="collapse" id="newItem">
+      <h4>New Item</h4>
+      <form v-on:submit.prevent="submit()">
+        <h2>Add Product!</h2>
+        <p>Product ID #: <input v-model="newListProductProductId"></p>
+        <p>Quantity: <input v-model="newListProductQuantity"></p>
+        <p>Description: <input v-model="newListProductDescription"></p>
+        <input type="submit" value="Add Item">
+      </form>
     </div>
-      
-  <button v-on:click="destroyList()"> Delete List </button>
-
-  <button class="btn btn-outline-success" type="button" data-toggle="collapse" data-target="#newItem">
-      Add Item
-  </button>
-
-  <div class="collapse" id="newItem">
-    <h4>New Item</h4>
-    <form v-on:submit.prevent="submit()">
-      <h2>Add Product!</h2>
-      <p>Product ID #: <input v-model="newListProductProductId"></p>
-      <p>Quantity: <input v-model="newListProductQuantity"></p>
-      <p>Description: <input v-model="newListProductDescription"></p>
-      <input type="submit" value="Add Item">
-    </form>
-  </div>
-  <div v-for="list_product in list_products">
-    {{list_product}}
-  </div>
-
-  </div>
   </div>
 </template>
 
@@ -58,24 +44,16 @@
               name: "",
               products: [
                           {
-                            inventories:
-                                      [
-                                        {
-                                          store:
+                            inventories: [
                                           {
+                                            store: {
+                                            }
                                           }
-                                        }
-                                      ]
+                                          ]
                           }
                         ]
         },
-
         list_products: [],
-
-        list_product: { 
-                      id: ""
-        },
-
         newListProductProductId: "",
         newListProductQuantity: "",
         newListProductDescription: "",
@@ -83,33 +61,25 @@
     },
 
     created: function() {
-      axios.get( "/api/lists/" + this.$route.params.id )
-      .then( response => {
+      axios.get("/api/lists/" + this.$route.params.id )
+      .then(response => {
         this.list = response.data;
-      });
-
-      axios.get( "/api/list_products" )
-      .then ( response => {
-        this.list_products = response.data;
       });
     },
 
     methods: {
-      destroyList: function() {
-        axios.delete("/api/lists/" + this.list.id)
-        .then(response => {
-          console.log("Successfully deleted list", response.data);
-        this.$router.push("/");
-        });
+      destroyListProduct: function(list) {
+        for (var i = 0; i < list.length; i++) {
+          var hash = list[i]
+          if (hash.list_id === parseInt(this.$route.params.id)) {
+            axios.delete("/api/list_products/" + hash.id)
+            .then(response => {
+              // var listProductIndex = this.listProducts.indexOf()
+              this.$router.push("/lists/" + this.list.id)
+            })
+          }
+        }
       },
-
-      destroyListProduct: function() {
-        axios.delete("/api/list_products/" + product.id)
-        .then(response => {
-        this.$router.push("/lists/" + this.list.id);
-        });
-      },
-
       submit: function() {
         var params = {
                       list_id: this.list.id,
@@ -117,16 +87,16 @@
                       quantity: this.newListProductQuantity,
                       description: this.newListProductDescription
         };
-
         axios.post("/api/list_products", params)
           .then(response => {
             console.log(response.data);
-            this.list_products = response.data;
-          });
+            this.list.products.push(response.data);
+            this.list.forceUpdate();
+          })
           .catch(error => {
             this.errors = error.response.data.errors;
           });
-      };
+      }
     }
   }
 </script>
