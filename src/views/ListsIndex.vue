@@ -51,14 +51,11 @@ export default {
   
   methods: {
     destroyList: function(listID, listName) {
-      // console.log(listID)
-      // console.log(listName)
       axios.delete("/api/lists/" + listID)
       .then(response => {
         console.log("Successfully deleted list", response.data);
         var listIndex = this.lists.indexOf(listName);
         this.lists.splice(listIndex, 1);
-      // this.$router.push("/lists");
       });
       
     },
