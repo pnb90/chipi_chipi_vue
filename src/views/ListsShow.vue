@@ -15,9 +15,9 @@
         </thead>
         <tbody>
           <tr v-for="product in list.products">
-            <td class="text-center"> {{ product.name }} </td>
+            <td class="text-center align-middle"> {{ product.name }} </td>
 
-            <td class="text-center">
+            <td class="text-center align-middle">
               <div v-for="list_product in product.list_products">
                 <div v-if="list_product.list_id = $route.params.id">  
                   {{ list_product.quantity }}
@@ -25,7 +25,7 @@
               </div>
             </td>
 
-            <td class="text-center">
+            <td class="text-center align-middle">
               <div v-for="list_product in product.list_products">
                 <div v-if="list_product.list_id = $route.params.id">  
                   {{ list_product.description}}
@@ -33,19 +33,19 @@
               </div>
             </td>
 
-            <td>
+            <td class="text-center align-middle">
               <div class="store_name" v-for="inventory in product.inventories">
                 {{inventory.store.name}}  
               </div>
             </td>
 
             <td>
-              <div class="price" v-for="inventory in product.inventories">
+              <div class="price text-center align-middle" v-for="inventory in product.inventories">
                 {{inventory.price}}
               </div>
             </td>
 
-            <td class="btn-sm btn-danger text-center" v-on:click="destroyListProduct(product.list_products)"> 
+            <td class="btn-sm btn-danger text-center align-middle" v-on:click="destroyListProduct(product.list_products)"> 
                 Remove Item 
             </td>
 
@@ -60,12 +60,15 @@
       <div class="collapse" id="newItem">
         <form v-on:submit.prevent="submit()">
           <h2>Add Product!</h2>
-          <!-- <p>Product Name: <input v-model="newListProductProductName"></p> -->
-          <p>Product ID #: <input v-model="newListProductProductId"></p>
+          <p>Product Name: <input v-model="newListProductProductName" list="names"></p>
+          <!-- <p>Product ID #: <input v-model="newListProductProductId"></p> -->
           <p>Quantity: <input v-model="newListProductQuantity"></p>
           <p>Description: <input v-model="newListProductDescription"></p>
           <input type="submit" value="Add Item">
         </form>
+        <datalist id="names">
+          <option v-for="product in products">{{ product.name }}</option>
+        </datalist>
       </div>
     </div>
   </div>
@@ -76,6 +79,7 @@
 
 <script>
   var axios = require("axios");
+  import Vue2Filters from "vue2-filters";
 
   export default {
     data: function() {
@@ -97,8 +101,9 @@
                         ]
         },
         list_products: [],
-        // newListProductProductName: "",
-        newListProductProductId: "",
+        products: [],
+        newListProductProductName: "",
+        // newListProductProductId: "",
         newListProductQuantity: "",
         newListProductDescription: "",
       };
@@ -108,6 +113,11 @@
       axios.get("/api/lists/" + this.$route.params.id )
       .then(response => {
         this.list = response.data;
+      });
+
+      axios.get("/api/products/" )
+      .then(response => {
+        this.products = response.data;
       });
     },
 
@@ -130,8 +140,8 @@
       submit: function() {
         var params = {
                       list_id: this.list.id,
-                      // product_name: this.newListProductProductName,
-                      product_id: this.newListProductProductId,
+                      product_name: this.newListProductProductName,
+                      // product_id: this.newListProductProductId,
                       quantity: this.newListProductQuantity,
                       description: this.newListProductDescription
         };
