@@ -2,14 +2,10 @@
 <html lang="en">
 
 <head>
-  <title>Travel Blog | AppStrap Bootstrap Theme by Themelize.me</title>
+  <title>Chipi-Chipi</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
-  <!-- @todo: fill with your company info or remove -->
-  <meta name="description" content="">
-  <meta name="author" content="Themelize.me">
 
   <!-- Bootstrap v4.3.1 CSS via CDN -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -17,38 +13,7 @@
   <!-- Plugins required on all pages NOTE: Additional non-required plugins are loaded ondemand as of AppStrap 2.5 -->
 
   <!-- Theme style -->
-  <link href="assets/css/theme-style.min.css" rel="stylesheet">
-
-  <!--Your custom colour override-->
-  <link href="#" id="colour-scheme" rel="stylesheet">
-
-  <!-- Your custom override -->
-  <link href="assets/css/custom-style.css" rel="stylesheet">
-
-
-
-  <!-- Optional: ICON SETS -->
-  <!-- Iconset: Font Awesome 5.0.13 via CDN -->
-  <link href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet">
-  <!-- Iconset: flag icons - http://lipis.github.io/flag-icon-css/ -->
-  <link href="assets/plugins/flag-icon-css/css/flag-icon.min.css" rel="stylesheet">
-  <!-- Iconset: ionicons - http://ionicons.com/ -->
-  <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
-  <!-- Iconset: Linearicons - https://linearicons.com/free -->
-  <link href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css" rel="stylesheet">
-  <!-- Iconset: Lineawesome - https://icons8.com/articles/line-awesome -->
-  <link href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css" rel="stylesheet">
-
-
-  <!-- Le fav and touch icons - @todo: fill with your icons or remove, try https://realfavicongenerator.net -->
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/favicons/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicons/favicon-16x16.png">
-  <link rel="manifest" href="assets/favicons/manifest.json">
-  <link rel="shortcut icon" href="assets/favicons/favicon.ico">
-  <meta name="msapplication-config" content="assets/favicons/browserconfig.xml">
-  <meta name="theme-color" content="#ffffff">
-
+  <link href="/assets/css/theme-style.min.css" rel="stylesheet">
 
   <!-- Google fonts -->
   <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
@@ -62,150 +27,15 @@
 </head>
 
 <!-- ======== @Region: body ======== -->
-
-<body class="page header-fixed-left-lg page-demo-travel-blog navbar-layout-default">
-
-
-  <a id="#top" href="#content" class="sr-only">Skip to content</a>
-
-
-  <!-- ======== @Region: #my stuff ======== -->
-
-<div id="app"></div>
-
-
-  <!--Off canvas region/sidebar (legacy .header-hidden region) -->
-  <aside id="offcanvas-sidebar" class="bg-dark text-white js-offcanvas">
-    <a class="js-offcanvas-close c-button c-button--close-right btn btn-sm btn-icon btn-link text-white pos-absolute pos-t pos-r mt-2 mr-2 op-7 pos-zindex-1 pos-zindex-10"> <i class="la la-close"></i> </a>
-  </aside>
-  <!--Hidden elements - excluded from jPanel Menu on mobile-->
-  <div class="hidden-elements js-off-canvas-exclude">
-    <!--@modal - signup modal-->
-    <div class="modal fade" id="signup-modal" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog">
-        <form action="signup.html">
-          <div class="modal-content">
-            <div class="modal-header bg-light">
-              <h4 class="modal-title">
-                Sign Up
-              </h4>
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            </div>
-            <div class="modal-body">
-              <div class="form-group">
-                <h6 class="op-8">
-                  Price Plan
-                </h6>
-                <select class="form-control">
-                    <option>Basic</option>
-                    <option>Pro</option>
-                    <option>Pro +</option>
-                  </select>
-              </div>
-              <hr />
-
-              <h6 class="op-8">
-                Account Information
-              </h6>
-              <div class="form-group">
-                <label class="sr-only" for="signup-first-name">First Name</label>
-                <input type="text" class="form-control" id="signup-first-name" placeholder="First name">
-              </div>
-              <div class="form-group">
-                <label class="sr-only" for="signup-last-name">Last Name</label>
-                <input type="text" class="form-control" id="signup-last-name" placeholder="Last name">
-              </div>
-              <div class="form-group">
-                <label class="sr-only" for="signup-username">Userame</label>
-                <input type="text" class="form-control" id="signup-username" placeholder="Username">
-              </div>
-              <div class="form-group">
-                <label class="sr-only" for="signup-email">Email address</label>
-                <input type="email" class="form-control" id="signup-email" placeholder="Email address">
-              </div>
-              <div class="form-group">
-                <label class="sr-only" for="signup-password">Password</label>
-                <input type="password" class="form-control" id="signup-password" placeholder="Password">
-              </div>
-              <div class="form-check text-xs">
-                <label class="form-check-label op-8">
-                    <input type="checkbox" value="term" class="form-check-input mt-1">
-                    I agree with the Terms and Conditions. 
-                  </label>
-              </div>
-            </div>
-            <div class="modal-footer bg-light py-3">
-              <div class="d-flex align-items-center">
-                <button type="button" class="btn btn-primary">Sign Up</button>
-                <button type="button" class="btn btn-link ml-1" data-dismiss="modal" aria-hidden="true">Cancel</button>
-              </div>
-              <p class="text-xs text-right text-lh-tight op-8 my-0 ml-auto">Already signed up? <a href="login.html">Login here</a></p>
-            </div>
-          </div>
-          <!-- /.modal-content -->
-        </form>
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
-
-    <!--@modal - login modal-->
-    <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <form action="login.html">
-            <div class="modal-header bg-light">
-              <h4 class="modal-title">
-                Login
-              </h4>
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            </div>
-            <div class="modal-body">
-              <div class="form-group">
-                <label class="sr-only" for="login-email">Email</label>
-                <input type="email" id="login-email" class="form-control email" placeholder="Email">
-              </div>
-              <div class="form-group mb-0">
-                <label class="sr-only" for="login-password">Password</label>
-                <input type="password" id="login-password" class="form-control password mb-1" placeholder="Password">
-              </div>
-            </div>
-            <div class="modal-footer bg-light py-3">
-              <div class="d-flex align-items-center">
-                <button type="button" class="btn btn-primary">Login</button>
-                <button type="button" class="btn btn-link ml-1" data-dismiss="modal" aria-hidden="true">Cancel</button>
-              </div>
-              <p class="text-xs text-right text-lh-tight op-8 my-0 ml-auto">
-                Not a member? <a href="#" class="signup">Sign up now!</a>
-                <br />
-                <a href="#">Forgotten password?</a>
-              </p>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-        </form>
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
+<div id="content" class="py-0">
+  <div class="container-fluid px-3 py-5 px-lg-4 py-lg-6 bg-grey">
+    <div id="app"></div>
   </div>
+</div>
 
-
-  <!--jQuery 3.3.1 via CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <!-- Popper 1.14.6 via CDN, needed for Bootstrap Tooltips & Popovers -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
-
-  <!-- Bootstrap v4.3.1 JS via CDN -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-
-  <!-- JS plugins required on all pages NOTE: Additional non-required plugins are loaded ondemand as of AppStrap 2.5 To disable this and load plugin assets manually simple add data-plugins-manual=true to the body tag -->
-
-  <!--Custom scripts & AppStrap API integration -->
-  <script src="assets/js/custom-script.js"></script>
-  <!--AppStrap scripts mainly used to trigger libraries/plugins -->
-  <script src="assets/js/script.min.js"></script>
+<body class="page header-fixed-left-lg page-demo-travel-blog-post navbar-layout-default">
+  <div class="container-fluid px-3 py-5 px-lg-4 py-lg-6 bg-grey">
+  </div>
 </body>
 
 </html>
