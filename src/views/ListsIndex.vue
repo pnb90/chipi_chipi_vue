@@ -1,29 +1,40 @@
 <template>
   <div class="lists-index">
     <h1>All Lists</h1>
-    <div v-for="list in lists">
+    <div id="lists" v-for="list in lists">
       <router-link v-bind:to="'/lists/' + list.id">
         <h2>{{ list.name }}</h2>
       </router-link>
-        <button class="btn btn-outline-danger" v-on:click="destroyList(list.id, list.name)"> Delete List </button>
+      <span class="btn btn-outline-danger" @click="destroyList(list.id)"> Delete List </span>
     </div>
 
-    <button class="btn btn-outline-success" type="button" data-toggle="collapse" data-target="#newList">
-        New List
-    </button>
-
-    <div class="collapse" id="newList">
-      <h4>New List</h4>
-      <ul>
-        <li v-for="error in errors">{{ error }}</li>
-      </ul>
-      <form v-on:submit.prevent="submit()">
-        <div>
-        Name: <input v-model="newListName">
+    <!-- modal -->
+    <div>
+      <modal v-if="showModal">
+        <h3 slot="header" class="modal-title">
+          Add List
+        </h3>
+        <div slot="body" class="text-center mb-3">
+          <ul>
+            <li v-for="error in errors">{{ error }}</li>
+          </ul>
+          <form v-on:submit.prevent="closeModal(); submit()">
+            <div>
+            Name: <input v-model="newListName">
+            </div>
+          </form>
         </div>
-        <input type="submit" value="Submit" name="btn btn-success">
-      </form>
+        <div slot="footer" class="mt-3">
+         <button type="button" class="btn btn-outline-info mr-1" @click="closeModal()"> Close </button>
+         <button type="button" class="btn btn-primary ml-1" data-dismiss="modal" @click="closeModal(); submit();">
+           Submit
+         </button>
+        </div>
+      </modal>
+      <button class="btn btn-success" @click="openModal()"> Add New List </button>
     </div>
+    <!-- end modal -->
+
   </div>
 </template>
 
@@ -32,13 +43,20 @@
 
 <script>
 var axios = require("axios");
+import Modal from '../components/Modal.vue';
+
 
 export default {
+  components: {
+    Modal
+  },
+
   data: function() {
     return {
       lists: [],
       newListName: "",
-      errors: []
+      errors: [],
+      showModal: false
     };
   },
 
@@ -46,18 +64,29 @@ export default {
     axios.get("/api/lists")
       .then(response => {
       this.lists = response.data;
-    });
+      })
+      .catch(error => {
+        this.$router.push("/login")
+      });
   },
   
   methods: {
-    destroyList: function(listID, listName) {
+    openModal: function() {
+      this.showModal = true;
+    },
+
+    closeModal: function() {
+      this.showModal = false;
+    },
+
+    destroyList: function(listID) {
       axios.delete("/api/lists/" + listID)
       .then(response => {
-        console.log("Successfully deleted list", response.data);
-        var listIndex = this.lists.indexOf(listName);
-        this.lists.splice(listIndex, 1);
+        axios.get("/api/lists")
+        .then(response => {
+          this.lists = response.data
+        });
       });
-      
     },
 
     submit: function() {
@@ -68,6 +97,7 @@ export default {
       axios.post("/api/lists", params)
         .then(response => {
           this.lists.push(response.data);
+          this.newListName = "";
         })
         .catch(error => {
           this.errors = error.response.data.errors;

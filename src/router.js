@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import ListsIndex from './views/ListsIndex.vue';
 import ListsShow from './views/ListsShow.vue';
+import ProductsNew from './views/ProductsNew.vue';
 import Signup from './views/Signup.vue';
 import Login from "./views/Login.vue";
 import Logout from "./views/Logout.vue";
@@ -12,9 +13,10 @@ export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
-    { path: '/', name: 'lists-index', component: ListsIndex },
+    { path: '/', name: 'home', component: ListsIndex },
     { path: '/lists', name: 'lists-index', component: ListsIndex },
     { path: "/lists/:id", name: "lists-show", component: ListsShow },
+    { path: "/products/new", name: "products-new", component: ProductsNew },
     { path: "/signup", name: "signup", component: Signup },
     { path: "/login", name: "login", component: Login },
     { path: "/logout", name: "logout", component: Logout }
