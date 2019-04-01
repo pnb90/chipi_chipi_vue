@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "gulp-cli": "^2.0.1",
     "quagga": "^0.12.1",
     "vue": "^2.6.6",
     "vue-quaggajs": "^1.0.8",

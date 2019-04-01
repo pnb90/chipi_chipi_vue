@@ -1,11 +1,26 @@
 <template>
-  <div class="lists-index">
-    <h1>All Lists</h1>
-    <div id="lists" v-for="list in lists">
-      <router-link v-bind:to="'/lists/' + list.id">
-        <h2>{{ list.name }}</h2>
-      </router-link>
-      <span class="btn btn-outline-danger" @click="destroyList(list.id)"> Delete List </span>
+  <div class="lists-index text-muted">
+    <div class="container">
+
+    <h1>Your Grocery Lists</h1>
+    <div class="card-deck pt-4 pb-4 pl-2 pr-2" >
+      <div class="row" >
+        <div class="col-sm-6" v-for="list in lists">
+          <div class="card mt-2 mb-2 ">
+            <div class="card-body" > 
+              <h2 class="text-center">
+                  {{ list.name }}
+              </h2>
+              <div class="text-center">
+                <router-link v-bind:to="'/lists/' + list.id">
+                  <p class="btn btn-warning mt-2 text-center">Edit</p>
+                </router-link>
+                <p class="btn btn-danger ml-3 mt-2 text-center" @click="destroyList(list.id)">Delete</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> 
     </div>
 
     <!-- modal -->
@@ -31,14 +46,27 @@
          </button>
         </div>
       </modal>
-      <button class="btn btn-success" @click="openModal()"> Add New List </button>
+      <button class="btn btn-success mt-3" @click="openModal()"> Add New List </button>
     </div>
     <!-- end modal -->
-
+    </div>
   </div>
 </template>
 
 <style>
+
+.card-deck {
+  background-color: #CFD0D8;
+}
+
+.card-deck .card {
+  background-color: #E3E7DD;
+}
+
+.card:hover {
+  box-shadow: 8px 8px 35px 3px lightgray;
+  opacity: 1;
+}
 </style>
 
 <script>
