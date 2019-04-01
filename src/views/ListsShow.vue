@@ -1,75 +1,94 @@
 <template>
   <div class="lists-show">
     <div class="container">
-      <h1 class="text-center">{{ list.name }} </h1>
-      <table class="table table-striped">
-        <thead class="thead-light">
-          <tr>
-            <th class="text-center" scope="col">Product</th>
-            <th class="text-center" scope="col">Quantity</th>
-            <th class="text-center" scope="col">Description</th>
-            <th class="text-center" scope="col" v-on:click="setSortAttribute('store')">Store</th>
-            <th class="text-center" scope="col" v-on:click="setSortAttribute('price')">Price Per Unit</th>
-            <!-- <th class="text-center" scope="col">Total Price</th> -->
-            <th class="text-center" scope="col">Got it!</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="product in list.products">
-            <td class="text-center align-middle"> {{ product.name }} </td>
-            <td class="text-center align-middle">
-              <div v-for="list_product in product.list_products">
-                <div v-if="list_product.list_id = $route.params.id">  
-                  {{ list_product.quantity }}
+      <h2 id=listName class="text-center text-muted mb-2" >{{ list.name }} </h2>
+      <div v-if="list.products.length > 0 ">
+        <table class="table table-hover">
+          <thead id="thead">
+            <tr>
+              <th class="text-center" scope="col" v-on:click="setSortAttribute('product')">Product</th>
+              <th class="text-center" scope="col" v-on:click="setSortAttribute('quantity')">Quantity</th>
+              <th class="text-center" scope="col">Description</th>
+              <th class="text-center" scope="col" v-on:click="setSortAttribute('store')">Store</th>
+              <th class="text-center" scope="col" v-on:click="setSortAttribute('price')">Price</th>
+              <th class="text-center" scope="col" v-on:click="setSortAttribute('totalPrice')">Total</th>
+              <th class="text-center" scope="col"></th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            <tr v-for="product in list.products">
+
+              <td class="text-center align-middle column-product"> {{ product.name }} </td>
+
+
+              <td @click="editItem(list_product)"  class="text-center align-middle column-quantity">
+                <div v-for="list_product in product.list_products">
+                  <div v-if="list_product.list_id = $route.params.id">  
+                    {{ list_product.quantity }}
+                  </div>
                 </div>
-                <div v-else>
-                  <p class="col-2"> 
-                  Not Available in Selected Stores
-                  </p>
+              </td>
+
+              <td class="text-center align-middle column-description">
+                <div v-for="list_product in product.list_products">
+                  <div v-if="list_product.list_id = $route.params.id">  
+                    {{ list_product.description}}
+                  </div>
                 </div>
-              </div>
-            </td>
+              </td>
 
-            <td class="text-center align-middle">
-              <div v-for="list_product in product.list_products">
-                <div v-if="list_product.list_id = $route.params.id">  
-                  {{ list_product.description}}
+              <td class="text-center column-store">
+                <div class="store_name text-center " v-for="inventory in  product.inventories">
+                  <td>
+                    {{inventory.store.name}}
+                  </td>
                 </div>
-              </div>
-            </td>
+              </td>
 
-            <td class="text-center align-middle">
-              <div class="store_name" v-for="inventory in  product.inventories">
-                {{inventory.store.name}}  
-              </div>
-            </td>
+              <td class="column-price">
+                <div class="price text-center align-middle " v-for="inventory in product.inventories" @click="splicePrice(list.products)">
+                  <td @click="clickedPrice = inventory.price" >
+                     {{inventory.price}} 
+                  </td>
+                </div>
+              </td>
 
-            <td>
-              <div class="price text-center align-middle" v-for="inventory in product.inventories">
-                {{inventory.price}}
-              </div>
-            </td>
+              <td class="column-total">
+                <div class="price text-center align-middle " v-for="list_product in product.list_products">
+                  <div v-for="inventory in product.inventories" v-if="totalProducts(list_product.quantity, inventory.price)">
+                    <td>
+                      {{totalProducts(list_product.quantity, inventory.price)}}
+                    </td>
+                  </div>
+                </div>
+              </td>
 
-      <!--       <td>
-              <div class="price text-center align-middle" v-for="inventory in product.inventories">
-                ({{inventory.price}} * {{list_product.quantity}})
-              </div>
-            </td>
- -->
-            <td class="btn-sm btn-danger text-center align-middle" v-on:click="destroyListProduct(product.list_products)"> 
-                Remove Item 
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
+              <td class="btn-lg text-center align-middle" v-on:click="destroyListProduct(product.list_products)">
+                  ❌
+              </td>
+            </tr>
+            <!-- <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="text-right">Total:</td>
+              <td v-if="totalList()"> {{totalList()}}</td>
+            </tr> -->
+          </tbody>
+        </table>
+      </div>
+      <div id="else" v-else>
+        <h3 class="text-center text-muted">Why not add some items?</h3>
+      </div>
+  
       <!-- Start ListProduct Modal -->
       <div>
         <modal v-if="showModal">
           <h3 slot="header" class="modal-title">
-            Add Product
+            Add Item
           </h3>
-          <div slot="body" class="text-center">
+          <div slot="body">
             <ul>
               <li v-for="error in errors">{{ error }}</li>
             </ul>
@@ -89,54 +108,58 @@
            </button>
           </div>
         </modal>
-        <button class="btn btn-success" @click="openModal()"> Add New Product </button>
       </div>
       <!-- End ListProduct Modal -->
 
 
       <!-- Start Quagga Modal -->
       <div>
-        <modal v-if="showModal">
+        <modal v-if="showModal2">
           <h3 slot="header" class="modal-title">
-            Create New Product
+            Create New Item
           </h3>
-          <div slot="body" class="text-center">
+          <div slot="body">
             <ul>
-              <li v-for="error in errors">{{   error }}</li>
+              <li v-for="error in errors">{{ error }}</li>
             </ul>
-            <form v-on:submit.prevent=" submitQuagga()">
-              <div>
-                Name: <input v-model="  newProductName">
+            <form class="ml-4" v-on:submit.prevent="closeModal2(); submitQuagga()">
+              <div class='mt-2 mb-2'>
+                Name: <input id="quaggaInput" class="ml-2 " v-model="newProductName">
               </div>
-              <div >
-                Store: <input v-model=" newProductStore" list="storeNames">
+              <div class='mt-2 mb-2'>
+                Store: <input id="quaggaInput" class="ml-2" v-model="newProductStore" list="storeNames">
                 <datalist id="storeNames">
                   <option v-for="store in stores" >{{ store.name }} </option>
                 </datalist>
               </div>
-              <div>
-                Weight (in oz): <input v-model  ="newProductWeight">
+              <div class='mt-2 mb-2'>
+                Weight: <input id="quaggaInput" class="ml-2" v-model="newProductWeight">
               </div>
-              <div>
-                Price: <input v-model=" newProductPrice">  
+              <div class='mt-2 mb-2'>
+                Price: $<input id="quaggaInput" class="ml-2" v-model=" newProductPrice">  
               </div>
-              <div>
-                UPC: <input v-model=" newDisplayBarcode">
+              <div v-if="newDisplayBarcode.length != 0">
+                Barcode: <input id="quaggaInput" class="ml-2" v-model="newDisplayBarcode">
               </div>
             </form>
           </div>
           <div slot="footer" class="mt-3">
-            <button id="barcode-scanner" class="btn btn-outline-info mr-1" v-on:click="runQuagga()"> Barcode Scanner </button>
-            <button type="button" class="btn btn-outline-info ml-1 mr-1" @click="closeModal()"> Close </button>
-            <button type="button" class="btn btn-primary ml-1" data-dismiss="modal" @click="closeModal(); submitQuagga();">
+            <button id="barcode-scanner" class="btn btn-outline-warning mt-2 mr-1" @click="runQuagga()"> Barcode Scanner </button>
+            <button type="button" class="btn btn-outline-info mt-2 ml-1 mr-1" @click="closeModal2(); stopQuagga()"> Close </button>
+            <button type="button" class="btn btn-outline-primary mt-2 ml-1" data-dismiss="modal" @click="closeModal2(); submitQuagga();">
              Submit
            </button>
           </div>
         </modal>
-        <button class="btn btn-success" @click="openModal()"> Create New Product </button>
       </div>
       <!-- End Quagga Modal -->
+      <div>
+        <div>
+          <button class="btn btn-success" @click="openModal()"> Add Item </button>
+          <button class="btn btn-outline-success" @click="openModal2()" style="margin-left: 25px"> Create New Item </button>
+      </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -149,6 +172,19 @@
   width: 100%;
   height: auto;
 }
+
+#thead {
+  background-color: #E1DDE7;
+}
+
+#tbody {
+  background-color: #DDDFE7;
+}
+
+#quaggaInput {
+  left: 500px;
+}
+
 </style>
 
 <script>
@@ -176,20 +212,23 @@
                             inventories: [
                                           {
                                             store: {
-                                            }
+                                            },
+                                            price: "",
                                           }
                                           ]
                           }
                         ]
         },
         errors: [],
-        list_products: [],
+        list_products: [
+        ],
         products: [],
         sortAttribute: "",
         newListProductProductName: "",
-        newListProductQuantity: "",
+        newListProductQuantity: "1",
         newListProductDescription: "",
         showModal: false,
+        showModal2: false,
         newDisplayBarcode: "",
         newProductName: "",
         newProductWeight: "",
@@ -197,7 +236,13 @@
         newProductPrice: "",
         newProductID: "",
         storeID: "",
-        stores: []
+        stores: [],
+        productTotals: "",
+        listTotals: [],
+        clickedPrice: "",
+        replacementArray: "",
+        patchProduct: "",
+        index: ""
       };
     },
 
@@ -226,9 +271,43 @@
         this.showModal = true;
       },
 
+      openModal2: function() {
+        this.showModal2 = true;
+      },
+
       closeModal: function() {
         this.showModal = false;
       },
+
+      closeModal2: function() {
+        this.showModal2 = false;
+      },
+
+      splicePrice: function(products) {
+        self = this
+        for (var i = 0; i < products.length; i++) {
+          for (var index = 0; index < products[i].inventories.length; index++) {
+            if (products[i].inventories[index].price === self.clickedPrice) {
+              self.patchProduct = products[i]
+              var replacementArray = products[i].inventories.splice(index, index+1)
+              self.index = index
+            }
+          } 
+        }
+        // console.log(self.index)
+        // this.patchPrice(self.patchProduct.list_products[0].id)
+      },
+
+      patchPrice: function(listProductID) {
+        var params = {index: self.index}
+        axios.patch("/api/list_products/" + listProductID, params)
+        .then(response => {
+          console.log("Successfully removed something, I guess?")
+        })
+        .catch(errors => {
+          console.log(errors)
+        });
+      }, 
 
       destroyListProduct: function(list) {
         for (var i = 0; i < list.length; i++) {
@@ -263,13 +342,19 @@
             .then(response => {
               this.list = response.data;
               this.newListProductProductName = "",
-              this.newListProductQuantity = "";
+              this.newListProductQuantity = "1";
               this.newListProductDescription = "";
             });
           })
           .catch(error => {
             this.errors = error.response.data.errors;
           });
+      },
+
+      editItem: function(item){
+        console.log("got into edit!")
+        console.log(item)
+
       },
 
       setSortAttribute: function(inputAttribute) {
@@ -343,8 +428,8 @@
 
         axios.post("/api/products", productParams)
           .catch(error => {
-            this.errors = error.response.data.errors;
-          }).then(response => {
+            this.errors = error.response.data.errors;})
+          .then(response => {
             this.newProductID = response.data.id 
             axios.post("/api/inventories", {
                                       product_id: this.newProductID,
@@ -352,8 +437,8 @@
                                       price: this.newProductPrice
                                       })
               .catch(error => {
-                this.errors = error.response.data.errors;
-              }).then(response => {
+                this.errors = error.response.data.errors;})
+              .then(response => {
                 console.log(response.data);
                 this.newDisplayBarcode = "";
                 this.newProductName = "";
@@ -366,7 +451,43 @@
 
       stopQuagga: function() {
         Quagga.stop();
-      }
+        this.newDisplayBarcode = "";
+        this.newProductName = "";
+        this.newProductWeight = "";
+        this.newProductStore = "";
+        this.newProductPrice = "";
+      },
+      // END QUAGGA STUFF
+
+      totalProducts: function(quantity, price) {
+        var regex = /\$/g;
+        var floatPrice = parseFloat(price.replace(regex, ''));
+        var floatQuantity = parseInt(quantity);
+        this.totalList(floatPrice * floatQuantity);
+        return "$" + (floatPrice * floatQuantity).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$0.99,');
+      },
+
+      totalList: function(total) {
+        if (total) {
+          if (this.listTotals.length < 10) {
+            this.listTotals.push(total)
+            // console.log(this.listTotals) 
+          }
+          // array.push(total)
+          // console.log(array)
+          // console.log(this.listTotals)
+          var sum = 0
+          // for(var i = 0; i < array.length; i++) {
+          //   console.log(array)
+          //   sum += parseInt(array[i]);
+          // }
+        }
+      },
+
+      apiCall: function() {
+        console.log("HEY I GOT HERE")
+      },
+
     },
     mixins: [Vue2Filters.mixin]
   }
